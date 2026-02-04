@@ -11,7 +11,7 @@ import { CategoryService } from '../../services/category.service';
   imports: [
     CommonModule,
     FormsModule,
-    MatSnackBarModule   // ✅ Snackbar module
+    MatSnackBarModule
   ],
   templateUrl: './category.component.html'
 })
@@ -99,7 +99,6 @@ export class CategoryComponent implements OnInit {
     this.loadCategories();
   }
 
-  // 🔔 Snackbar helpers
   showSuccess(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

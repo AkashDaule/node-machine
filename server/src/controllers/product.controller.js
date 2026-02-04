@@ -1,25 +1,13 @@
 const db = require("../config/db");
 
-// Get products with pagination (SERVER SIDE)
-// Pagination starts from page 0:
-// Page 0: records 1-10 (offset 0)
-// Page 1: records 11-20 (offset 10)
-// Page 9: records 91-100 (offset 90)
 exports.getProductsPaginated = async (req, res) => {
   try {
-    // Handle page 0 correctly: parseInt("0") returns 0, which is falsy
-    // Use nullish coalescing or explicit check to preserve 0
     const page = req.query.page !== undefined ? parseInt(req.query.page) : 0;
     const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : 10;
     
-    // Validate page and limit are valid numbers
     const pageNum = isNaN(page) ? 0 : Math.max(0, page);
     const limitNum = isNaN(limit) || limit < 1 ? 10 : limit;
     
-    // Calculate offset: Page 0-based pagination
-    // Page 0: offset = 0 * 10 = 0 (records 1-10)
-    // Page 1: offset = 1 * 10 = 10 (records 11-20)
-    // Page 9: offset = 9 * 10 = 90 (records 91-100)
     const offset = pageNum * limitNum;
 
     const products = await db.query(
@@ -40,7 +28,7 @@ exports.getProductsPaginated = async (req, res) => {
     const count = await db.query("SELECT COUNT(*) FROM products");
 
     res.json({
-      page: pageNum + 1, // Response shows 1-based page number (page 0 → "page": 1, page 1 → "page": 2)
+      page: pageNum + 1,
       limit: limitNum,
       total: parseInt(count.rows[0].count),
       data: products.rows
@@ -50,12 +38,10 @@ exports.getProductsPaginated = async (req, res) => {
   }
 };
 
-// Create product
 exports.createProduct = async (req, res) => {
   try {
     const { name, category_id } = req.body;
 
-    // Validation: Check required fields
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Product name is required" });
     }
@@ -64,7 +50,6 @@ exports.createProduct = async (req, res) => {
       return res.status(400).json({ message: "Category ID is required" });
     }
 
-    // Validation: Check if category exists
     const categoryCheck = await db.query(
       "SELECT id FROM categories WHERE id = $1",
       [category_id]
@@ -85,13 +70,11 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// Update product
 exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, category_id } = req.body;
 
-    // Validation: Check required fields
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Product name is required" });
     }
@@ -100,7 +83,6 @@ exports.updateProduct = async (req, res) => {
       return res.status(400).json({ message: "Category ID is required" });
     }
 
-    // Validation: Check if product exists
     const productCheck = await db.query(
       "SELECT id FROM products WHERE id = $1",
       [id]
@@ -110,7 +92,6 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Validation: Check if category exists
     const categoryCheck = await db.query(
       "SELECT id FROM categories WHERE id = $1",
       [category_id]
@@ -134,12 +115,10 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// Delete product
 exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validation: Check if product exists
     const productCheck = await db.query(
       "SELECT id FROM products WHERE id = $1",
       [id]

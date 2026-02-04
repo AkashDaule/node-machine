@@ -17,6 +17,7 @@
   <table>
     <thead>
       <tr>
+        <th>Sr. No</th>
         <th>ID</th>
         <th>Name</th>
         <th style="text-align:center;">Actions</th>
@@ -24,7 +25,8 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let cat of categories">
+      <tr *ngFor="let cat of categories; let i = index">
+        <td>{{ i + 1 }}</td>
         <td>{{ cat.id }}</td>
         <td>{{ cat.name }}</td>
         <td>

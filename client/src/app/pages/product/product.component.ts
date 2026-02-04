@@ -26,7 +26,7 @@ export class ProductComponent implements OnInit {
   categoryId: number | null = null;
   editingId: number | null = null;
 
-  page = 0; // Page starts from 0
+  page = 0;
   limit = 10;
   total = 0;
 
@@ -41,14 +41,16 @@ export class ProductComponent implements OnInit {
     this.loadProducts();
   }
 
-  // 🔹 Computed value for template
   get totalPages(): number {
     return Math.ceil(this.total / this.limit);
   }
 
-  // Display page number (1-based for user display)
   get displayPage(): number {
-    return this.page ;
+    return this.page;
+  }
+
+  getSerialNumber(index: number): number {
+    return this.page * this.limit + index + 1;
   }
 
   loadCategories() {
@@ -59,7 +61,7 @@ export class ProductComponent implements OnInit {
 
   loadProducts() {
     this.productService.getProducts(this.page, this.limit).subscribe(res => {
-      this.products = res.data;   // backend returns { data, total }
+      this.products = res.data;
       this.total = res.total;
     });
   }
@@ -67,10 +69,10 @@ export class ProductComponent implements OnInit {
   saveProduct() {
     if (!this.productName || !this.categoryId) return;
 
-   const payload = {
-   name: this.productName,       // ✅ correct
-   category_id: this.categoryId
-};
+    const payload = {
+      name: this.productName,
+      category_id: this.categoryId
+    };
 
 
     if (this.editingId) {

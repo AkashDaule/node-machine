@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Get all categories
 exports.getAllCategories = async (req, res) => {
   try {
     const result = await db.query(
@@ -12,7 +11,6 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-// Create category
 exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -28,7 +26,6 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// Update category
 exports.updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,12 +42,10 @@ exports.updateCategory = async (req, res) => {
   }
 };
 
-// ✅ FIXED Delete category (FOREIGN KEY SAFE)
 exports.deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1️⃣ Check if products exist for this category
     const check = await db.query(
       "SELECT COUNT(*) FROM products WHERE category_id = $1",
       [id]
@@ -63,7 +58,6 @@ exports.deleteCategory = async (req, res) => {
       });
     }
 
-    
     await db.query(
       "DELETE FROM categories WHERE id = $1",
       [id]

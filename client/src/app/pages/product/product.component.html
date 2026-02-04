@@ -1,7 +1,6 @@
 <div class="container">
   <h2>Product Master</h2>
 
-  <!-- Product Form -->
   <div class="form-row product-form">
     <input type="text" [(ngModel)]="productName" placeholder="Product Name" class="form-input" />
 
@@ -17,10 +16,10 @@
     </button>
   </div>
 
-  <!-- Product Table -->
   <table>
     <thead>
       <tr>
+        <th>Sr. No</th>
         <th>Product ID</th>
         <th>Product Name</th>
         <th>Category ID</th>
@@ -30,7 +29,8 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let p of products">
+      <tr *ngFor="let p of products; let i = index">
+        <td>{{ getSerialNumber(i) }}</td>
         <td>{{ p.product_id }}</td>
         <td>{{ p.product_name }}</td>
         <td>{{ p.category_id }}</td>
@@ -47,7 +47,6 @@
     </tbody>
   </table>
 
-  <!-- Pagination -->
   <div class="pagination">
     <button (click)="prevPage()" [disabled]="page === 0">Prev</button>
 
